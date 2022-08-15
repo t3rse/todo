@@ -6,42 +6,6 @@ mod todo_file;
 
 use crate::todo::{add_item, init, list_all, list_filter};
 use clap::{App, Arg};
-use clap::{AppSettings, Parser, Subcommand};
-
-#[derive(Parser, Debug)]
-#[clap(name = "todo")]
-#[clap(author = "david.seruyange@gmail.com")]
-#[clap(
-about = "Rust port of todo.sh"
-)]
-struct Cli {
-    #[clap(subcommand)]
-    command: Commands,
-}
-
-#[derive(Subcommand, Debug)]
-enum Commands {
-    /// Add a todo item to the list.
-    Add {
-        /// Contents of the todo item (to be parsed out).
-        item: Option<String>,
-    },
-    /// List all todo items.
-    ListAll {},
-    /// List items with a filter.
-    #[clap(setting(AppSettings::ArgRequiredElseHelp))]
-    List {
-        /// filter string for list of todo items.
-        filter: String,
-    },
-    /// Remove todo list item.
-    #[clap(setting(AppSettings::ArgRequiredElseHelp))]
-    Remove {
-        /// the id of target todo list item.
-        id: String,
-    },
-}
-
 
 fn main() {
     let matches = App::new("Todo")
@@ -50,7 +14,7 @@ fn main() {
         .about("Rust port of Todo.sh")
         .arg(
             Arg::with_name("ADD")
-                .short('a')
+                .short("a")
                 .long("add")
                 .value_name("ADD")
                 .help("Add an item to todo list")
@@ -58,7 +22,7 @@ fn main() {
         )
         .arg(
             Arg::with_name("REMOVE")
-                .short('r')
+                .short("r")
                 .long("remove")
                 .value_name("REMOVE")
                 .help("Remove an item to todo list")
@@ -66,7 +30,7 @@ fn main() {
         )
         .arg(
             Arg::with_name("LIST")
-                .short('l')
+                .short("l")
                 .long("list")
                 .value_name("LIST")
                 .help("Displays filtered items on todo list")
@@ -74,7 +38,7 @@ fn main() {
         )
         .arg(
             Arg::with_name("LISTALL")
-                .short('f')
+                .short("f")
                 .long("listall")
                 .value_name("LISTALL")
                 .help("Displays all items on todo list")
