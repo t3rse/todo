@@ -51,13 +51,12 @@ fn main() {
     if let Some(new_item) = matches.value_of("ADD") {
         let line_item = new_item.to_owned() + "\n";
         add_item(line_item.as_str(), &todo_conf);
-    }
-
-    if let Some(larg) = matches.value_of("LIST") {
+    } else if let Some(larg) = matches.value_of("LIST") {
         list_filter(larg, &todo_conf);
+    } else if let Some(_larg) = matches.value_of("LISTALL") {
+        list_all(&todo_conf);
     }
-
-    if let Some(_larg) = matches.value_of("LISTALL") {
+    else{
         list_all(&todo_conf);
     }
 

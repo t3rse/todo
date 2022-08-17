@@ -23,6 +23,7 @@ pub fn init() -> Result<TodoConf, &'static str> {
     } else {
         let new_conf = TodoConf {
             owner: "Anon".to_string(),
+            conf_path: home_dir_string,
             list_path: home_dir_todo,
         };
         save_conf(&new_conf);
