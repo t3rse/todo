@@ -6,11 +6,13 @@ use regex::Regex;
 use std::fs;
 use std::fs::OpenOptions;
 use std::io::Write;
+use crate::todo_file::TodoFile;
 
 pub fn init() -> Result<TodoConf, &'static str> {
     let home_dir_unwrap = dirs::home_dir().unwrap();
     let home_dir = home_dir_unwrap.to_str();
     let home_dir_string = home_dir.unwrap().to_string() + "/todo.conf";
+    let home_dir_todo = home_dir.unwrap().to_string() + "/todo.json";
 
     let b = std::path::Path::new(home_dir_string.as_str()).exists();
     if b {
@@ -21,7 +23,8 @@ pub fn init() -> Result<TodoConf, &'static str> {
     } else {
         let new_conf = TodoConf {
             owner: "Anon".to_string(),
-            list_path: home_dir_string,
+            conf_path: home_dir_string,
+            list_path: home_dir_todo,
         };
         save_conf(&new_conf);
 
@@ -86,7 +89,7 @@ fn parse_todo_projects(item: &str) -> Result<Vec<String>, &'static str> {
 }
 
 fn write_to_file(item: &str, _conf: &TodoConf) {
-    let fp = String::from("/Users/David.Seruyange/temp/todo.txt");
+    let fp = _conf.list_path.clone();
     let b = std::path::Path::new(fp.as_str()).exists();
     if b {
         let mut file = OpenOptions::new()
@@ -100,25 +103,29 @@ fn write_to_file(item: &str, _conf: &TodoConf) {
     }
 }
 
-fn read_from_file(_conf: &TodoConf) -> String {
-    let fp = String::from("/Users/David.Seruyange/temp/todo.txt");
+fn read_from_file(conf: &TodoConf) -> String {
+    let fp = conf.list_path.clone();
     let b = std::path::Path::new(fp.as_str()).exists();
     if b {
         let contents = fs::read_to_string(fp).expect("Something went wrong reading the file");
-
-        let mut line_no = 0;
         let lines: Vec<&str> = contents.split("\n").collect();
 
         let mut todo_list: Vec<String> = Vec::new();
         for line in lines {
-            todo_list.push(format!("{}-{}", line_no, line.to_string()));
-            line_no += 1;
+            // todo_list.push(format!("{}-{}", line_no, line.to_string()));
+            todo_list.push(line.to_string());
         }
 
         todo_list.join("\n")
     } else {
         "".to_string()
     }
+}
+
+pub fn _get_file(conf: &TodoConf) -> TodoFile{
+    let fs_content = read_from_file(conf);
+    serde_json::from_str(&fs_content).unwrap()
+
 }
 
 pub fn add_item(item: &str, conf: &TodoConf) {
