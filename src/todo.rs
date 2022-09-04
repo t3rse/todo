@@ -89,7 +89,7 @@ fn parse_todo_projects(item: &str) -> Result<Vec<String>, &'static str> {
 }
 
 fn write_to_file(item: &str, _conf: &TodoConf) {
-    let fp = String::from("/Users/David.Seruyange/temp/todo.txt");
+    let fp = _conf.list_path.clone();
     let b = std::path::Path::new(fp.as_str()).exists();
     if b {
         let mut file = OpenOptions::new()
@@ -103,9 +103,8 @@ fn write_to_file(item: &str, _conf: &TodoConf) {
     }
 }
 
-fn read_from_file(_conf: &TodoConf) -> String {
-    // let fp = String::from("/Users/David.Seruyange/temp/todo.txt");
-    let fp = _conf.list_path.clone();
+fn read_from_file(conf: &TodoConf) -> String {
+    let fp = conf.list_path.clone();
     let b = std::path::Path::new(fp.as_str()).exists();
     if b {
         let contents = fs::read_to_string(fp).expect("Something went wrong reading the file");
