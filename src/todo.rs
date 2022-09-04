@@ -108,14 +108,12 @@ fn read_from_file(conf: &TodoConf) -> String {
     let b = std::path::Path::new(fp.as_str()).exists();
     if b {
         let contents = fs::read_to_string(fp).expect("Something went wrong reading the file");
-
-        let mut line_no = 0;
         let lines: Vec<&str> = contents.split("\n").collect();
 
         let mut todo_list: Vec<String> = Vec::new();
         for line in lines {
-            todo_list.push(format!("{}-{}", line_no, line.to_string()));
-            line_no += 1;
+            // todo_list.push(format!("{}-{}", line_no, line.to_string()));
+            todo_list.push(line.to_string());
         }
 
         todo_list.join("\n")
